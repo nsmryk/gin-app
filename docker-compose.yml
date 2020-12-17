@@ -1,0 +1,35 @@
+version: '3'
+ 
+services:
+  
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    container_name: api
+    depends_on:
+      - mysql
+    volumes:
+      - '.:/gin-app'
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+      MYSQL_DATABASE: db
+    tty: true
+    stdin_open: true 
+
+  mysql:
+      image: mysql:5.7.22
+      environment:
+          MYSQL_ROOT_PASSWORD: admin
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: admin
+          MYSQL_DATABASE: db
+      ports:
+        - "3306:3306"
+      container_name: mysql
+      volumes:
+        - ./mysql/data:/var/lib/mysql
+        - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+        - ./mysql/sql:/docker-entrypoint-initdb.d
+ 
